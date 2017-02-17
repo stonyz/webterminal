@@ -1,12 +1,51 @@
-Web ssh shell & sftp
+Web Terminal
 ====================
-SSH shell Web & SFTP is a SSH based web remote management system, due to the limited time, the current version of the shell SSH terminal only supports password authentication, if you have better suggestions, please send to the mailbox: 331319769@qq.com.
+The tool is to facilate the java developer to explorer the file on the server by the shell command, and also can execute some command. But currenlty some command can't be supported, such as *top*. We may add them later.
 
-Administrators can operate like the real shell, such as the installation of software, modify the file, and so on, and these operations are able to real-time feedback to the console terminal, in order to achieve this, I use the websocket spring for remote interaction, I only configured websocket spring, for not supporting websocket browser, you need to manually configure the sockJs, of course, it is very simple.
+It's web project built by Maven. Spring and Struts are the main parts. The front-end is built by bootstrap. We use websocket to communicate, so please make sure your web container support websocket.
 
-For users not familiar with the shell commands, we added the SFTP feature, use it to carry out visual operations, of course, it is difficult to completely simulate the effect of the software, only provides a number of simple functions, such as: File visualization, new folder, modify file permissions properties, upload the local file, download remote files, delete files, only this. If you have better suggestions, please send to the mailbox: 331319769@qq.com.
+The core code to execute shell command is below,
 
-The reason for this project is only because of interest, it may be that I am lazy, so I do not have to do a number of security measures, only to the user's password encryption processing, taking into account security issues, users can own their own extensions, such as adding keys SSH authentication, and HTTPS protocol.
+    public static String exec(String cmd) {
+        if (cmd == null || cmd.trim().length()==0){
+            return "";
+        }
+        try {
+            String[] cmdA = {"/bin/sh", "-c", cmd};
+            Process process = Runtime.getRuntime().exec(cmdA);
+            LineNumberReader br = new LineNumberReader(new InputStreamReader(
+                    process.getInputStream()));
+            StringBuffer sb = new StringBuffer();
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+                sb.append(line).append("\n");
+            }
+            System.out.println("result:" + sb.toString());
+            return sb.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+From the code above, we also know why can't some command like *top*. If you have any good idea, please let me know.
+
+The frond end use the terminal javascript library https://github.com/chjj/term.js, which is very cool and easy to use. 
+
+	var term = new Terminal({
+	    cols: Math.floor($width / 7.25),
+	    rows: Math.floor($height / 17.42),
+	    screenKeys: false,
+        useStyle: true,
+        cursorBlink: true,
+        convertEol: true
+	  });
+To Know more detail about term.js, please go the officail website.
+How to use
+-------------
+The default username and password is stonyz@gmail.com/123456, which is defined in the file WEB-INF/users.properties. You can change it, or add more users if you want.
+
 Prerequisites
 -------------
 * Java JDK 1.7 or greater
@@ -20,26 +59,7 @@ http://caniuse.com/websockets
 
 Screenshots
 -----------
-![Regist](https://github.com/xwlcn/webssh/raw/master/screenshots/regist.png)
+![Login](https://github.com/stonyz/webterminal/raw/master/screenshots/login.png)
 
-![Login](https://github.com/xwlcn/webssh/raw/master/screenshots/login.png)
+![Terminal](https://github.com/stonyz/webterminal/raw/master/screenshots/terminal.png)
 
-![Home](https://github.com/xwlcn/webssh/raw/master/screenshots/home.png)
-
-![Manage Systems](https://github.com/xwlcn/webssh/raw/master/screenshots/login.png)
-
-![User Center](https://github.com/xwlcn/webssh/raw/master/screenshots/usercenter.png)
-
-![Open Machine](https://github.com/xwlcn/webssh/raw/master/screenshots/openmachine.png)
-
-![Shell](https://github.com/xwlcn/webssh/raw/master/screenshots/shell.png)
-
-![Delete Machine](https://github.com/xwlcn/webssh/raw/master/screenshots/deletemachine.png)
-
-![Modify Permissions](https://github.com/xwlcn/webssh/raw/master/screenshots/modifypermissions.png)
-
-![Delete File](https://github.com/xwlcn/webssh/raw/master/screenshots/deletefile.png)
-
-![Upload File](https://github.com/xwlcn/webssh/raw/master/screenshots/uploadfile.png)
-
-![Change Directory](https://github.com/xwlcn/webssh/raw/master/screenshots/changedir.png)
