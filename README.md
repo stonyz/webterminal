@@ -1,8 +1,8 @@
 Web Terminal
 ====================
-The tool is to facilate the java developer to explorer the file on the server by the shell command, and also can execute some command. But currenlty some command can't be supported, such as *top*. We may add them later.
+The tool is to facilitate the java developer to explorer the files on the server by the shell command, and also can execute some commands. NOT all, only some, such as *top*, which isn't supported. We may add more later.
 
-It's web project built by Maven. Spring and Struts are the main parts. The front-end is built by bootstrap. We use websocket to communicate, so please make sure your web container support websocket.
+It's a web project built by Maven. Spring and Struts are the main parts. The front-end is built by bootstrap. We use websocket to communicate, so please make sure your web container support websocket.
 
 The core code to execute shell command is below,
 
